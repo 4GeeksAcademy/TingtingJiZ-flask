@@ -1,15 +1,19 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ScrollToTop from "./component/scrollToTop";
-import { BackendURL } from "./component/backendURL";
-
-import { Home } from "./pages/home";
-import { Demo } from "./pages/demo";
-import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
-
-import { Navbar } from "./component/navbar";
-import { Footer } from "./component/footer";
+//import custom component
+import ScrollToTop from "./component/ScrollToTop.jsx";
+import { BackendURL } from "./component/BackendURL.jsx";
+import { Navbar } from "./component/Navbar.jsx";
+import { Footer } from "./component/Footer.jsx";
+//import custom pages
+import { Home } from "./pages/Home.jsx";
+import { Demo } from "./pages/Demo.jsx";
+import { Single } from "./pages/Single.jsx";
+import { Error404 } from "./pages/Error404.jsx";
+import { Contact } from "./pages/Contact.jsx";
+import { Form } from "./pages/Form.jsx";
+import { Edit } from "./pages/Edit.jsx";
 
 //create your first component
 const Layout = () => {
@@ -17,10 +21,10 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
-        <div>
+        <div className="d-flex flex-column min-vh-100">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
@@ -28,7 +32,10 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<h1>Not found!</h1>} />
+                        <Route element={<Contact />} path="/contact" />
+                        <Route element={<Form />} path="/form" />
+                        <Route element={<Edit />} path="/edit" />
+                        <Route element={<Error404 />} path="*" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
