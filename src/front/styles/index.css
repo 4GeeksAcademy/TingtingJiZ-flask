@@ -1,3 +1,7 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+
+.card-text {
+    color:rgb(94, 96, 96)
+}
