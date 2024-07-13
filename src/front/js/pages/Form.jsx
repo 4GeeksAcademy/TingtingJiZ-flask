@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Form = () => {
     const { store, actions } = useContext(Context)
@@ -25,7 +25,7 @@ export const Form = () => {
         }, []) */
     return (
         <form onSubmit={handlePost} className="container w-50">
-            <h1>Add Contact</h1>
+            <h1 className="mt-5">Add Contact</h1>
             <div className="text-start">
                 <div className="mb-3" >
                     <label htmlFor="exampleInputName" className="form-label">Full Name</label>
@@ -43,7 +43,12 @@ export const Form = () => {
                     <label htmlFor="exampleInputAddress" className="form-label">Address</label>
                     <input value={address} onChange={(event) => setAddress(event.target.value)} type="text" className="form-control" id="exampleInputAddress" placeholder="Enter Address" aria-describedby="emailHelp" />
                 </div>
-                <button type="submit" className="btn btn-primary">Save</button>
+                <Link to={"/contact"}>
+                    <button type="submit" className="btn btn-primary">Save</button>
+                </Link>
+                <Link to={"/contact"}>
+                    <button type="submit" className="btn btn-danger ms-2">Cancel</button>
+                </Link>
             </div>
         </form>
     )
