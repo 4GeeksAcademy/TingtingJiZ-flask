@@ -24,9 +24,9 @@ export const Edit = (id) => {
             actions.getUser()
         }, []) */
     return (
-        <form onSubmit={handleUpdate} className="container w-50">
-            <h1 className="mt-5">Edit Contact</h1>
-            <div className="text-start">
+        <form onSubmit={handleUpdate} className="container w-50 bg-white mt-5">
+            <h1 className="my-2">Edit Contact</h1>
+            <div className="text-start mb-2">
                 <div className="mb-3" >
                     <label htmlFor="exampleInputName" className="form-label">Full Name</label>
                     <input value={name} onChange={(event) => setName(event.target.value)} type="text" className="form-control" id="exampleInputName" placeholder="Full Name" aria-describedby="emailHelp" />
