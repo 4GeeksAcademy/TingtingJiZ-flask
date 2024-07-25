@@ -14,6 +14,12 @@ import { Error404 } from "./pages/Error404.jsx";
 import { Contact } from "./pages/Contact.jsx";
 import { Form } from "./pages/Form.jsx";
 import { Edit } from "./pages/Edit.jsx";
+import { Characters } from "./pages/Characters.jsx";
+import { Details } from "./pages/Details.jsx";
+import { Planets } from "./pages/Planets.jsx";
+import { PlanetsDetails } from "./pages/PlanetsDetails.jsx";
+import { Species } from "./pages/Species.jsx";
+import { SpeciesDetails } from "./pages/SpeciesDetails.jsx"
 
 //create your first component
 const Layout = () => {
@@ -35,6 +41,12 @@ const Layout = () => {
                         <Route element={<Contact />} path="/contact" />
                         <Route element={<Form />} path="/form" />
                         <Route element={<Edit />} path="/edit" />
+                        <Route element={<Characters />} path="/characters" />
+                        <Route element={<Details />} path="/details" />
+                        <Route element={<Planets />} path="/planets" />
+                        <Route element={<PlanetsDetails />} path="/planets-details" />
+                        <Route element={<Species />} path="/species" />
+                        <Route element={<SpeciesDetails/>} path="/species-details" />
                         <Route element={<Error404 />} path="*" />
                     </Routes>
                     <Footer />

@@ -1,3 +1,4 @@
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -14,10 +15,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-			website: "Contact List",
+			website: "Star Wars",
 			contacts: [],
-			currentContact: null,
-			host: "https://playground.4geeks.com/contact"
+			currentContact: [],
+			host: "https://playground.4geeks.com/contact",
+
+			//Star Wars
+			characters: [],
+			currentCharacter: {},
+			planets: [],
+			currentPlanet: {},
+			species: [],
+			currentSpecies: {},
+			favourite: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -67,7 +77,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.setItem("contacts", JSON.stringify(data));
 			},
 
-			getPost: async ( name, address, phone, email) => {
+			getPost: async (name, address, phone, email) => {
 				const url = `${getStore().host}/agendas/broccoli/contacts`;
 				const dataToSend = {
 					"name": name,
@@ -129,6 +139,110 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log(response);
 			},
 
+			getCharacters: async () => {
+				const uri = `${process.env.URISWAPTECH}/api/people`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json()
+				console.log(data.results)
+				setStore({ characters: data.results });
+			},
+
+			getDetails: async (characterid) => {
+				const uri = `${process.env.URISWAPTECH}/api/people/${characterid}`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options)
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				console.log(data.result);
+				setStore({ currentCharacter: data.result })
+			},
+
+			getPlanets: async () => {
+				const uri = `${process.env.URISWAPTECH}/api/planets`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json()
+				console.log(data.results)
+				setStore({ planets: data.results })
+			},
+
+			planetDetails: async (planetid) => {
+				const uri = `${process.env.URISWAPTECH}/api/planets/${planetid}`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options)
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				console.log(data.result);
+				setStore({ currentPlanet: data.result })
+			},
+
+			getSpecies: async () => {
+				const uri = `${process.env.URISWAPTECH}/api/species`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json()
+				console.log(data.results)
+				setStore({ species: data.results })
+			},
+
+			speciesDetails: async (speciesid) => {
+				const uri = `${process.env.URISWAPTECH}/api/species/${speciesid}`
+				const options = {
+					method: "GET",
+				}
+				const response = await fetch(uri, options)
+				if (!response.ok) {
+					console.log("error: ", response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				console.log(data.result);
+				setStore({ currentSpecies: data.result })
+			},
+
+/* 			removeFavourite: (name) => {
+				const existingFavourites = getStore().favourite;
+				const updatedFavourites = existingFavourites.filter(item => item.name !== name);
+				setStore({ favourite: updatedFavourites });
+			}, */
+			addFavourite: (title) => {
+				setStore({favourite: [...getStore().favourite, title]})
+			},
+			removeFavourite: (id) => {
+				setStore({favourite: getStore().favourite.filter((item, i) => { return i != id; })})
+			},
+
+			setCurrentCharacter: (character) => { setStore({ setCurrentCharacter: character }) },
+			setCurrentPlanet: (planet) => { setStore({ setCurrentPlanet: planet }) },
 			setCurrentContact: (contact) => { setStore({ currentContact: contact }) },
 
 		}

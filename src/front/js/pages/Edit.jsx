@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 export const Edit = (id) => {
     const { store, actions } = useContext(Context)
@@ -16,7 +15,7 @@ export const Edit = (id) => {
         if (confirm('Are you sure you want to edit this contact?')) {
             // Lo que sea
             await actions.getUpdate(store.currentContact.id, name, address, phone, email)
-            navigate("/")
+            navigate("/contact")
         }
 
     }
@@ -25,9 +24,9 @@ export const Edit = (id) => {
             actions.getUser()
         }, []) */
     return (
-        <form onSubmit={handleUpdate} className="container w-50">
-            <h1>Edit Contact</h1>
-            <div className="text-start">
+        <form onSubmit={handleUpdate} className="container w-50 bg-white mt-5">
+            <h1 className="my-2">Edit Contact</h1>
+            <div className="text-start mb-2">
                 <div className="mb-3" >
                     <label htmlFor="exampleInputName" className="form-label">Full Name</label>
                     <input value={name} onChange={(event) => setName(event.target.value)} type="text" className="form-control" id="exampleInputName" placeholder="Full Name" aria-describedby="emailHelp" />
@@ -44,9 +43,7 @@ export const Edit = (id) => {
                     <label htmlFor="exampleInputAddress" className="form-label">Address</label>
                     <input value={address} onChange={(event) => setAddress(event.target.value)} type="text" className="form-control" id="exampleInputAddress" placeholder="Enter Address" aria-describedby="emailHelp" />
                 </div>
-
                 <button type="submit" className="btn btn-primary">Save</button>
-
             </div>
         </form>
     )
