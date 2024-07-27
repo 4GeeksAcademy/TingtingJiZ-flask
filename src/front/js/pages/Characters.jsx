@@ -32,7 +32,8 @@ export const Characters = () => {
             <h1 className="text-center text-light mt-3">Characters</h1>
             <div className="row row-cols-1 row-cols-md-3 row-cols-xl-5 g-2 justify-content-center">
                 {store.characters && store.characters.map((item) => (
-                    <div key={item.uid} className="card mx-2 my-3">
+                    <div  key={item.uid} style={{width: "18rem"}}>
+                    <div className="card mx-2 my-3">
                         <img className="card-img-top mt-0" src={`https://starwars-visualguide.com/assets/img/characters/${item.uid}.jpg`} onError={handleError} alt="Luke Skywalker" />
                         <div className="card-body">
                             <h5 className="card-title">{item.name}</h5>
@@ -44,10 +45,10 @@ export const Characters = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 ))}
             </div>
         </div>
     )
 }
 
-{/* <img class="card-img-top" src={`https://starwars-visualguide.com/assets/img/characters/${index + 1}.jpg`} alt="Luke Skywalker"></img> */ }
