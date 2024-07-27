@@ -19,9 +19,9 @@ export const Characters = () => {
         event.targer.src = "https://starwars-visualguide.com/assets/img/placeholder.jpg"
     }
 
-/*     const handleAdd = async(name) => {
-        await actions.addFavourite(name)
-    } */
+    /*     const handleAdd = async(name) => {
+            await actions.addFavourite(name)
+        } */
 
     useEffect(() => {
         fetchData()
@@ -32,15 +32,17 @@ export const Characters = () => {
             <h1 className="text-center text-light mt-3">Characters</h1>
             <div className="row row-cols-1 row-cols-md-3 row-cols-xl-5 g-2 justify-content-center">
                 {store.characters && store.characters.map((item) => (
-                    <div key={item.uid} className="card mx-2 my-3">
-                        <img className="card-img-top mt-0" src={`https://starwars-visualguide.com/assets/img/characters/${item.uid}.jpg`} onError={handleError} alt="Luke Skywalker" />
-                        <div className="card-body">
-                            <h5 className="card-title">{item.name}</h5>
-                            <div className="justify-content-between d-flex">
-                            <span href="#" onClick={() => handleDetails(item.uid)} className="btn btn-primary">Details</span>
-                            <span onClick={() => actions.addFavourite(item.name)} type="button" className="btn btn-danger">
-                                <i className="fa fa-heart"></i>
-                            </span>
+                    <div key={item.uid} style={{ width: "18rem" }}>
+                        <div className="card mx-2 my-3">
+                            <img className="card-img-top mt-0" src={`https://starwars-visualguide.com/assets/img/characters/${item.uid}.jpg`} onError={handleError} alt="Luke Skywalker" />
+                            <div className="card-body">
+                                <h5 className="card-title">{item.name}</h5>
+                                <div className="justify-content-between d-flex">
+                                    <span href="#" onClick={() => handleDetails(item.uid)} className="btn btn-primary">Details</span>
+                                    <span onClick={() => actions.addFavourite(item.name)} type="button" className="btn btn-danger">
+                                        <i className="fa fa-heart"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
