@@ -41,7 +41,8 @@ class Authors(db.Model):
         return {"id": self.id,
                 "name": self.name,
                 "lastname": self.lastname,
-                "user_id": self.user_id}
+                "user_id": self.user_id,
+                "book_to": [row.serialize() for row in self.book_to]}
 
 class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,3 +58,4 @@ class Books(db.Model):
         return {"id": self.id,
                 "title": self.title,
                 "author_id": self.author_id}
+        

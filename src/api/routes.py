@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from api.models import db, Users
+from api.models import db, Users, Authors
 
 
 api = Blueprint('api', __name__)
@@ -48,4 +48,17 @@ def handle_user(user_id):
         return response_body, 200
     if request.method == "DELETE":
         response_body["message"] = f'Recibi el DELETE request {user_id}'
+        return response_body, 200
+
+@api.route("/authors", methods=["GET", "POST"])
+def handle_authors():
+    response_body = {}
+    if request.method == "GET":
+        rows = db.session.execute(db.select(Authors)).scalars()
+        results = [row.serialize() for row in rows]  # List comprehesion
+        response_body["results"] = results
+        response_body["message"] = "GET autors"
+        return response_body, 200
+    if request.method == "POST":
+        response_body["message"] = "POST request"
         return response_body, 200
