@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from api.models import db, Users
+from api.models import db, Users, Favourites
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
@@ -108,3 +108,27 @@ def profile():
     response_body['message'] = f'Acceso dengado porque no eres Administrador'
     response_body['results'] = {}
     return response_body, 403
+
+@api.route("/favourites/<int:iser_id>", methods=["GET","POST"])
+def favourites():
+    response_body = {}
+    if request.method == "GET":
+        list_favourites = db.session.execute(db.select(Favourites).where(Favourites.user_id == user_id)).scalars()
+        results = [row.serialize() for row in list_favourites]
+        response_body["results"] = results
+        response_body["message"] = "GET request"
+        return response_body, 200
+
+    if request.method == "POST":
+       data = request.json
+       item = data.get("item")
+       user = db.session.execute(db.select(Favourites).where(Favourites.item == user_id)).scalar()
+       if not user:
+        response_body["message"] = "user doesnt exist"
+        return response_body, 404
+       favourite = Favourite (item = data.get("item"),
+                              user_id = user_id)
+    db.session.add(user)
+    db.session.commit()
+    response_body["message"] = "POST request"
+    return response_body, 201
