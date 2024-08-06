@@ -20,6 +20,10 @@ import { Planets } from "./pages/Planets.jsx";
 import { PlanetsDetails } from "./pages/PlanetsDetails.jsx";
 import { Species } from "./pages/Species.jsx";
 import { SpeciesDetails } from "./pages/SpeciesDetails.jsx"
+import { Login } from "./pages/Login.jsx"
+import { Signup } from "./pages/Signup.jsx"
+import { Logout } from "./component/Logout.jsx";
+
 
 //create your first component
 const Layout = () => {
@@ -47,7 +51,10 @@ const Layout = () => {
                         <Route element={<PlanetsDetails />} path="/planets-details" />
                         <Route element={<Species />} path="/species" />
                         <Route element={<SpeciesDetails/>} path="/species-details" />
-                        <Route element={<Error404 />} path="*" />
+                        <Route element={<Login />} path="/login" />
+                        <Route element={<Signup />} path="/signup" />
+                        <Route element={<Logout />} path="/logout" />
+                        <Route element={<Error404 />} path="*"/>
                     </Routes>
                     <Footer />
                 </ScrollToTop>
