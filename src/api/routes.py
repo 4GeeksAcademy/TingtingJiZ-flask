@@ -5,6 +5,8 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from api.models import db, Users, Authors
+import requests
+import json
 
 
 api = Blueprint('api', __name__)
@@ -62,3 +64,50 @@ def handle_authors():
     if request.method == "POST":
         response_body["message"] = "POST request"
         return response_body, 200
+
+@api.route("/load-data", methods=["GET"])
+def load_data_from_api():
+    response_body = {}
+    url = 'https://randomuser.me/api/?nat=es&results=20'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        response_body["results"] = data["results"]
+        for row in data["results"]:
+            email = row["email"]
+            password = row["login"]["password"]
+            firstname = row["name"]["first"]
+            lastname = row["name"]["last"]
+            print(email, password, firstname, lastname)
+            user = Users()
+            user.email = email
+            user.password = password
+            user.firstname = firstname
+            user.lastname = lastname
+            user.is_active = True
+            user.is_admin = False
+            db.session.add(user)
+            db.session.commit()
+    return {}, 200
+
+@api.route("/load.json", methods= ["GET"])
+def load_json():
+    with open('src/api/user.json') as json_file:
+        data = json.load(json_file)
+        print(data)
+        for row in data:
+            email = row["email"]
+            password = row["password"]
+            firstname = row["firstname"]
+            lastname = row["lastname"]
+            print(email, password, firstname, lastname)
+            user = Users()
+            user.email = email
+            user.password = password
+            user.firstname = firstname
+            user.lastname = lastname
+            user.is_active = row["is_active"]
+            user.is_admin = row["is_admin"]
+            db.session.add(user)
+            db.session.commit()
+    return {}, 200
