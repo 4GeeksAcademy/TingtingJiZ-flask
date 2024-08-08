@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 
+
 export const Navbar = () => {
     const { store, actions } = useContext(Context)
 
@@ -41,18 +42,35 @@ export const Navbar = () => {
                                 <ul className="dropdown-menu-end dropdown-menu">
                                     {store.favourite.length > 0 ? (
                                         store.favourite.map((index, id) => (
-                                        <li className="d-flex justify-content-between my-2 mx-2" key={id} >
-                                            {index}
-                                            <span onClick={() => actions.removeFavourite(id)} type="submit" className="text-end">
-                                                <i className="fa fa-trash text-danger"></i>
-                                            </span>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="dropdown-item">No favourites</li>
-                                )}
+                                            <li className="d-flex justify-content-between my-2 mx-2" key={id} >
+                                                {index}
+                                                <span onClick={() => actions.removeFavourite(id)} type="submit" className="text-end">
+                                                    <i className="fa fa-trash text-danger"></i>
+                                                </span>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="dropdown-item">No favourites</li>
+                                    )}
                                 </ul>
                             </li>
+                            {store.isLogged ?
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/Logout">Logout</Link>
+                                    </li>
+                                </>
+                                :
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/Login">Login</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/Signup">Signup</Link>
+                                    </li>
+
+                                </>
+                            }
                         </ul>
                     </div>
                 </div>
