@@ -109,26 +109,33 @@ def profile():
     response_body['results'] = {}
     return response_body, 403
 
-@api.route("/favourites/<int:iser_id>", methods=["GET","POST"])
+@api.route("/favourites", methods=["POST","GET"])
+@jwt_required()
 def favourites():
     response_body = {}
-    if request.method == "GET":
-        list_favourites = db.session.execute(db.select(Favourites).where(Favourites.user_id == user_id)).scalars()
-        results = [row.serialize() for row in list_favourites]
-        response_body["results"] = results
-        response_body["message"] = "GET request"
-        return response_body, 200
+    current_user = get_jwt_identity()
+    user = db.session.execute(db.select(Users).where(Users.id == current_user["user_id"])).scalar()
+    if not user:
+        response_body["results"] = {}
+        response_body["message"] = "User not found"
+        return response_body, 404
 
     if request.method == "POST":
        data = request.json
        item = data.get("item")
-       user = db.session.execute(db.select(Favourites).where(Favourites.item == user_id)).scalar()
        if not user:
-        response_body["message"] = "user doesnt exist"
-        return response_body, 404
-       favourite = Favourite (item = data.get("item"),
-                              user_id = user_id)
-    db.session.add(user)
-    db.session.commit()
-    response_body["message"] = "POST request"
-    return response_body, 201
+           response_body["message"] = "Missing favourite item"
+           return response_body, 400
+       favourites = Favourites (item = item,
+                                user_id = current_user["user_id"])
+       db.session.add(favourites)
+       db.session.commit()
+       response_body["message"] = "Favourite item added seccessfully"
+       return response_body, 201
+
+    if request.method == "GET":
+        favourites = db.session.execute(db.select(Favourites).where(Favourites.user_id == current_user["user_id"])).scalars()
+        results = [{"id": row.id, "item": row.item} for row in favourites]
+        response_body["results"] = results
+        response_body["message"] = f"Favourites for user {current_user}"
+        return response_body, 200
