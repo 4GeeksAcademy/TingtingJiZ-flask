@@ -8,7 +8,8 @@ from api.models import db, Users, Favourites
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
-
+import requests
+import json
 
 api = Blueprint('api', __name__)
 CORS(api)  # Allow CORS requests to this API
@@ -109,6 +110,54 @@ def profile():
     response_body['results'] = {}
     return response_body, 403
 
+""" @api.route("/load-data", methods=["GET"])
+def load_data_from_api():
+    response_body = {}
+    url = 'https://randomuser.me/api/?nat=es&results=20'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        response_body["results"] = data["results"]
+        for row in data["results"]:
+            email = row["email"]
+            password = row["login"]["password"]
+            firstname = row["name"]["first"]
+            lastname = row["name"]["last"]
+            print(email, password, firstname, lastname)
+            user = Users()
+            user.email = email
+            user.password = password
+            user.firstname = firstname
+            user.lastname = lastname
+            user.is_active = True
+            user.is_admin = False
+            db.session.add(user)
+            db.session.commit()
+    return {}, 200
+ """
+""" @api.route("/load-json", methods= ["GET"])
+def load_json():
+    with open('src/api/user.json') as json_file:
+        data = json.load(json_file)
+        print(data)
+        for row in data:
+            email = row["email"]
+            password = row["password"]
+            firstname = row["firstname"]
+            lastname = row["lastname"]
+            print(email, password, firstname, lastname)
+            user = Users()
+            user.email = email
+            user.password = password
+            user.firstname = firstname
+            user.lastname = lastname
+            user.is_active = row["is_active"]
+            user.is_admin = row["is_admin"]
+            db.session.add(user)
+            db.session.commit()
+    return {}, 200 """
+
+
 @api.route("/favourites", methods=["POST","GET"])
 @jwt_required()
 def favourites():
@@ -119,15 +168,14 @@ def favourites():
         response_body["results"] = {}
         response_body["message"] = "User not found"
         return response_body, 404
-
+    user_id = user.id
     if request.method == "POST":
        data = request.json
        item = data.get("item")
        if not user:
            response_body["message"] = "Missing favourite item"
            return response_body, 400
-       favourites = Favourites (item = item,
-                                user_id = current_user["user_id"])
+       favourites = Favourites (item = item, user_id=user_id)
        db.session.add(favourites)
        db.session.commit()
        response_body["message"] = "Favourite item added seccessfully"

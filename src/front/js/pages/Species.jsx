@@ -16,7 +16,7 @@ export const Species = () => {
 
     }
     const handleError = (event) => {
-        event.targer.src = "https://starwars-visualguide.com/assets/img/placeholder.jpg"
+        event.target.src = "https://starwars-visualguide.com/assets/img/placeholder.jpg"
     }
 
     useEffect(() => {
