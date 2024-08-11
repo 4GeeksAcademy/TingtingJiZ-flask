@@ -25,7 +25,7 @@ class Users(db.Model):
 class Favourites(db.Model):
     __tablaname__ = "favourites"
     id = db.Column(db.Integer, primary_key=True)
-    item = db.Column(db.String(1200), unique=True, nullable=False)
+    item = db.Column(db.String(1200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user_to = db.relationship("Users", foreign_keys=[user_id],
                               backref=db.backref("user_to", lazy="select"))

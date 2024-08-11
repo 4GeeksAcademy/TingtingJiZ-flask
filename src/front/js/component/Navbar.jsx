@@ -7,17 +7,12 @@ import { Context } from "../store/appContext";
 export const Navbar = () => {
     const { store, actions } = useContext(Context)
 	const navigate = useNavigate()
-	const userLogin = store.isLoged
+	const userLogin = store.isLogged
 	const token = localStorage.getItem('token');
 
 
-   /*  const remotefavorite = async (id) => {
-		actions.removeFavorite(id);
-	} */
-
     const removeFavourites = async (item) => {
-		const uri = process.env.BACKEND_URL + 'api/favourites';
-		console.log(uri);
+		const uri = process.env.BACKEND_URL + '/api/favourites';
 		const options = {
 			method: 'DELETE',
 			body: JSON.stringify({"item": item}),
@@ -39,8 +34,7 @@ export const Navbar = () => {
 	}
 
 	const favourite = async () => {
-		const uri = process.env.BACKEND_URL + 'api/favourites';
-		console.log(uri);
+		const uri = process.env.BACKEND_URL + '/api/favourites';
 		const options = {
 			method: 'GET',
 			headers: {
@@ -48,22 +42,18 @@ export const Navbar = () => {
 				'Content-Type': 'application/json'
 			}
 		};
-		console.log(userLogin);
-			console.log("Hay login"+store.isLoged);
 			try {
 				const response = await fetch(uri, options);
-				if (response.status == 422) {
+				if (!response.ok) {
 					console.log("Error: ", response.status, response.statusText);
 					return;
 				}
 				const data = await response.json();
-				actions.setFavourites(data.result);
-				console.log(data);
+				actions.setFavourites(data.results);
 			} catch (error) {
 				console.log('Eroor fecth', error);
 				return;
 			}
-		favourite();
 	}
 	useEffect(() => {
 		if(userLogin){
@@ -98,7 +88,7 @@ export const Navbar = () => {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/Contact">Contact List</Link>
                             </li>
-                            <li className="nav-item dropdown">
+                            <li onClick={() => favourite()} className="nav-item dropdown">
                                 <Link className="nav-link dropdown-toggle btn btn-secondary" to="/" data-bs-toggle="dropdown" aria-expanded="false">Favourite<span className="badge text-bg-secondary">{store.favourites.length}</span></Link>
                                 <ul className="dropdown-menu-end dropdown-menu">
                                     {store.favourites.length > 0 ? (

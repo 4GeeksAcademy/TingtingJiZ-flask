@@ -12,6 +12,7 @@ export const Logout = () => {
         actions.setIsLogged(false);
         actions.setCurrentUser(null);
         actions.setAlert({visible: false, back: "info", text: ""})
+        actions.setfavourites([]);
         navigate("/")
     }
 

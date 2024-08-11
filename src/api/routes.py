@@ -158,7 +158,7 @@ def load_json():
     return {}, 200 """
 
 
-@api.route("/favourites", methods=["POST","GET"])
+@api.route("/favourites", methods=["POST","GET", "DELETE"])
 @jwt_required()
 def favourites():
     response_body = {}
@@ -172,13 +172,19 @@ def favourites():
     if request.method == "POST":
        data = request.json
        item = data.get("item")
+       print("here1")
        if not user:
            response_body["message"] = "Missing favourite item"
            return response_body, 400
+       favourite = db.session.execute(db.select(Favourites).where(Favourites.user_id == user_id, Favourites.item == item)).scalar()
+       if favourite:
+            response_body["message"] = "The favourite already exists!!!"
+            return jsonify(response_body), 409
        favourites = Favourites (item = item, user_id=user_id)
        db.session.add(favourites)
        db.session.commit()
        response_body["message"] = "Favourite item added seccessfully"
+       print("here5")
        return response_body, 201
 
     if request.method == "GET":
@@ -187,3 +193,15 @@ def favourites():
         response_body["results"] = results
         response_body["message"] = f"Favourites for user {current_user}"
         return response_body, 200
+
+    if request.method == "DELETE":
+        data = request.json
+        itemUser = data.get("item")
+        favourite_to_delete = db.session.execute(db.select(Favourites).where(Favourites.user_id == user_id, Favourites.item == itemUser)).scalar()
+        if not favourite_to_delete:
+            response_body["message"] = f"Favourite item '{itemUser}' not found"
+            return jsonify(response_body), 404
+        db.session.delete(favourite_to_delete)
+        db.session.commit()
+        response_body["message"] = f"Favourite item '{itemUser}' deleted"
+        return jsonify(response_body), 201
