@@ -1,14 +1,75 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+
 
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context)
+	const navigate = useNavigate()
+	const userLogin = store.isLoged
+	const token = localStorage.getItem('token');
 
-    /*     const handleDelete = (name) => {
-            actions.removeFavourite(name)
-        } */
+
+   /*  const remotefavorite = async (id) => {
+		actions.removeFavorite(id);
+	} */
+
+    const removeFavourites = async (item) => {
+		const uri = process.env.BACKEND_URL + 'api/favourites';
+		console.log(uri);
+		const options = {
+			method: 'DELETE',
+			body: JSON.stringify({"item": item}),
+			headers: {
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			}
+		};
+		const response = await fetch(uri, options);
+		if(!response.ok){
+			console.log('Error', response.status, response.statusText);
+		}
+		if(response == 201){
+			console.log("All alright");
+			
+		}
+		console.log('Favourite deleted correctly');
+		favourite();
+	}
+
+	const favourite = async () => {
+		const uri = process.env.BACKEND_URL + 'api/favourites';
+		console.log(uri);
+		const options = {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			}
+		};
+		console.log(userLogin);
+			console.log("Hay login"+store.isLoged);
+			try {
+				const response = await fetch(uri, options);
+				if (response.status == 422) {
+					console.log("Error: ", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				actions.setFavourites(data.result);
+				console.log(data);
+			} catch (error) {
+				console.log('Eroor fecth', error);
+				return;
+			}
+		favourite();
+	}
+	useEffect(() => {
+		if(userLogin){
+			favourite();
+		}
+	}, [userLogin]);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
@@ -38,13 +99,13 @@ export const Navbar = () => {
                                 <Link className="nav-link" to="/Contact">Contact List</Link>
                             </li>
                             <li className="nav-item dropdown">
-                                <Link className="nav-link dropdown-toggle btn btn-secondary" to="/" data-bs-toggle="dropdown" aria-expanded="false">Favourite</Link>
+                                <Link className="nav-link dropdown-toggle btn btn-secondary" to="/" data-bs-toggle="dropdown" aria-expanded="false">Favourite<span className="badge text-bg-secondary">{store.favourites.length}</span></Link>
                                 <ul className="dropdown-menu-end dropdown-menu">
-                                    {store.favourite.length > 0 ? (
-                                        store.favourite.map((index, id) => (
-                                            <li className="d-flex justify-content-between my-2 mx-2" key={id} >
-                                                {index}
-                                                <span onClick={() => actions.removeFavourite(id)} type="submit" className="text-end">
+                                    {store.favourites.length > 0 ? (
+                                        store.favourites.map((fav, index) => (
+                                            <li className="d-flex justify-content-between my-2 mx-2" key={index} >
+                                                {fav.item}
+                                                <span onClick={() => removeFavourites(fav.item)} type="submit" className="text-end">
                                                     <i className="fa fa-trash text-danger"></i>
                                                 </span>
                                             </li>

@@ -31,12 +31,12 @@ class Favourites(db.Model):
                               backref=db.backref("user_to", lazy="select"))
     
     def __repr__(self):
-        return f"item favourites of {self.iser_id} is {self.item}"
+        return f"item favourites of {self.user_id} is {self.item}"
     
     def serialize(self):
         return{"id": self.id,
                "item": self.item,
-               "user_id": self.user_id}
+               "user_id": self.user.id}
 
 
 class Characters(db.Model):

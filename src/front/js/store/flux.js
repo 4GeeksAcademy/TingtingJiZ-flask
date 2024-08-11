@@ -19,9 +19,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			contacts: [],
 			currentContact: [],
 			host: "https://playground.4geeks.com/contact",
+
+			//auth-front
 			isLogged: false,
 			currentUser: null,
 			alert: {visible: false, back: "danger", text: "message of the back"},
+			favourites:[],
 
 			//Star Wars
 			characters: [],
@@ -249,7 +252,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			setCurrentContact: (contact) => { setStore({ currentContact: contact }) },
 			setAlert: (newAlert) => {setStore({alert: newAlert})},
 			setCurrentUser: (user) => {setStore({currentUser: user})},
-			setIsLogged: (isLogin) => {setStore({isLogged: isLogin})}
+			setIsLogged: (isLogin) => {setStore({isLogged: isLogin})},
+			setFavourites: (favourites) => {setStore({favourites: favourites })}
 
 		}
 	};

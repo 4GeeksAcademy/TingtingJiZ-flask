@@ -19,6 +19,42 @@ export const Species = () => {
         event.target.src = "https://starwars-visualguide.com/assets/img/placeholder.jpg"
     }
 
+    const addFavouriteApi = async(favourite) =>{
+        const token = localStorage.getItem('token');
+        console.log(token);
+        const dataToSend = {
+            "item": favourite,
+        };
+        const uri = process.env.BACKEND_URL + '/api/favourites'
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(dataToSend),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        console.log(dataToSend, localStorage.getItem('access_token'));
+        const response = await fetch(uri, options)
+        if (!response.ok) {
+            console.log('Error: ', response.status, response.statusText);
+            if (response.status == 401) {
+                const data = await response.json()
+                // let alert = {
+                //     visible: true,
+                //     back: 'danger',
+                //     text: data.message
+                // }
+                // actions.setAlert(alert)
+                console.log("Error: " + response.status + response.statusText)
+            }
+            else if(response.status == 409){
+                console.log("El favorito ya existe");
+            }
+            return
+        }
+    }
+
     useEffect(() => {
         fetchData()
     }, [])
@@ -35,7 +71,7 @@ export const Species = () => {
                                 <h5 className="card-title">{item.name}</h5>
                                 <div className="justify-content-between d-flex">
                                     <span href="#" onClick={() => handleDetails(item.uid)} className="btn btn-primary">Details</span>
-                                    <span onClick={() => actions.addFavourite(item.name)} type="button" className="btn btn-danger text-end">
+                                    <span onClick={() => addFavouriteApi(item.name)} type="button" className="btn btn-danger text-end">
                                         <i className="fa fa-heart"></i>
                                     </span>
                                 </div>
